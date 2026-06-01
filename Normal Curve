@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 4 Interactive Lesson: The Normal Curve</title>
+<style>
+  :root {
+    --fsu-garnet: #782F40;
+    --fsu-garnet-deep: #5A2230;
+    --fsu-gold: #CEB888;
+    --gold-deep: #B07D2B;
+    --dark-blue: #1F4E79;
+    --med-blue: #2E5395;
+    --light-blue: #D9E2F3;
+    --accent-yellow: #FFF2CC;
+    --accent-yellow-border: #BFA000;
+    --accent-yellow-text: #7F6000;
+    --green: #2E7D32;
+    --light-green: #E8F5E9;
+    --red: #C62828;
+    --light-red: #FFEBEE;
+    --gray-dark: #333;
+    --gray-med: #666;
+    --gray-light: #CCC;
+    --gray-xlight: #E8E8E8;
+    --bg-alt: #F7F7F7;
+    --shadow: 0 2px 4px rgba(0,0,0,0.08);
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Calibri', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--gray-dark);
+    line-height: 1.55;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fff;
+  }
+  header.lesson-title {
+    background: var(--dark-blue);
+    color: white;
+    padding: 24px 28px;
+    border-radius: 6px;
+    margin-bottom: 24px;
+  }
+  header.lesson-title .course {
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    opacity: 0.85;
+    margin-bottom: 6px;
+  }
+  header.lesson-title h1 {
+    font-size: 28px;
+    margin: 0;
+    font-weight: 700;
+  }
+  
+  .xbar {
+    text-decoration: overline;
+    font-style: italic;
+    font-family: 'Times New Roman', serif;
+  }
+  
+  .lesson-frame {
+    background: var(--bg-alt);
+    border-left: 4px solid var(--fsu-garnet);
+    padding: 16px 20px;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 28px;
+  }
+  .lesson-frame p { margin: 6px 0; }
+  
+  .step { margin: 32px 0; padding: 0; }
+  .step-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    border-bottom: 2px solid var(--dark-blue);
+    padding-bottom: 8px;
+  }
+  .step-number {
+    display: inline-block;
+    background: var(--dark-blue);
+    color: white;
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 16px;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+  .step-header h2 {
+    margin: 0;
+    font-size: 22px;
+    color: var(--dark-blue);
+    font-weight: 700;
+  }
+  .step p { margin: 12px 0; }
+  .step ul, .step ol { margin: 12px 0; padding-left: 28px; }
+  .step li { margin-bottom: 6px; }
+  
+  .viz { margin: 20px 0; text-align: center; }
+  .viz svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+  .viz-caption {
+    font-size: 13px;
+    color: var(--gray-med);
+    margin-top: 6px;
+    font-style: italic;
+  }
+  
+  .hist-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 20px 0;
+  }
+  @media (max-width: 700px) {
+    .hist-pair { grid-template-columns: 1fr; }
+  }
+  
+  .formula {
+    background: var(--bg-alt);
+    border: 1px solid var(--gray-light);
+    padding: 14px 18px;
+    border-radius: 6px;
+    text-align: center;
+    margin: 16px 0;
+    font-size: 18px;
+  }
+  .formula em { font-style: italic; }
+  
+  .callout {
+    background: #FEF7E0;
+    border: 1px solid var(--accent-yellow-border);
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 16px 0;
+  }
+  .callout .callout-label {
+    font-weight: 700;
+    color: var(--accent-yellow-text);
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  
+  .note {
+    background: var(--light-blue);
+    border-left: 3px solid var(--med-blue);
+    padding: 10px 14px;
+    margin: 14px 0;
+    border-radius: 0 4px 4px 0;
+    font-size: 14px;
+  }
+  
+  /* ============= STEP 4 INTERACTIVE CURVE ============= */
+  .curve-widget {
+    background: white;
+    border: 2px solid var(--dark-blue);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 24px 0;
+  }
+  .curve-widget h3 {
+    margin: 0 0 4px 0;
+    color: var(--dark-blue);
+    font-size: 18px;
+  }
+  .curve-widget .subtitle {
+    font-size: 13px;
+    color: var(--gray-med);
+    margin-bottom: 14px;
+  }
+  .curve-widget .ctrl-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 10px 0;
+    flex-wrap: wrap;
+  }
+  .curve-widget .ctrl-row label {
+    font-weight: 600;
+    color: var(--dark-blue);
+    min-width: 130px;
+    font-size: 14px;
+  }
+  .curve-widget .ctrl-row input[type="range"] {
+    flex: 1;
+    min-width: 200px;
+  }
+  .curve-widget .ctrl-row input[type="number"] {
+    width: 80px;
+    padding: 5px 8px;
+    border: 1px solid var(--gray-light);
+    border-radius: 4px;
+    font-family: 'Consolas', monospace;
+    font-size: 14px;
+    text-align: center;
+  }
+  .curve-widget .ctrl-row input[type="number"]:focus {
+    outline: 2px solid var(--dark-blue);
+    outline-offset: -1px;
+  }
+  .curve-widget .preset-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+    align-items: center;
+  }
+  .curve-widget .preset-row .preset-label {
+    font-size: 12px;
+    color: var(--gray-med);
+    margin-right: 4px;
+  }
+  .curve-widget .preset-chip {
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--dark-blue);
+    background: var(--light-blue);
+    border: 1px solid var(--med-blue);
+    padding: 4px 9px;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .curve-widget .preset-chip:hover { background: var(--med-blue); color: white; }
+  
+  /* ============= EXPLORER STYLES ============= */
+  .explorer-section { margin: 24px 0; }
+  
+  .explorer-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 20px 0;
+  }
+  @media (max-width: 800px) {
+    .explorer-grid { grid-template-columns: 1fr; }
+  }
+  .panel {
+    background: white;
+    border: 2px solid var(--fsu-garnet);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .panel.full-sample {
+    border-color: var(--dark-blue);
+    margin-bottom: 16px;
+  }
+  .panel.full-sample .panel-header { background: var(--dark-blue); }
+  
+  .panel-header {
+    background: var(--fsu-garnet);
+    color: white;
+    padding: 10px 14px;
+  }
+  .panel-header .title { font-size: 15px; font-weight: 700; margin: 0; }
+  .panel-header .stats { font-size: 12px; opacity: 0.9; margin-top: 2px; }
+  .panel-body { padding: 12px; }
+  .panel-chart {
+    background: var(--bg-alt);
+    border-radius: 4px;
+    padding: 4px;
+    margin-bottom: 10px;
+  }
+  .panel-chart svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    touch-action: none;
+    cursor: ew-resize;
+  }
+  
+  .mode-toggle {
+    display: flex;
+    background: var(--gray-xlight);
+    border-radius: 6px;
+    padding: 3px;
+    margin-bottom: 10px;
+    gap: 3px;
+  }
+  .mode-toggle button {
+    flex: 1;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-med);
+    background: none;
+    border: none;
+    padding: 6px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .mode-toggle button.active {
+    background: var(--fsu-garnet);
+    color: white;
+  }
+  .panel.full-sample .mode-toggle button.active { background: var(--dark-blue); }
+  
+  .panel-slider {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .panel-slider .slider-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-med);
+    min-width: 80px;
+  }
+  .panel-slider input[type=range] {
+    -webkit-appearance: none;
+    appearance: none;
+    flex: 1;
+    height: 5px;
+    border-radius: 5px;
+    background: linear-gradient(90deg, var(--gray-light), var(--fsu-garnet));
+    outline: none;
+  }
+  .panel.full-sample .panel-slider input[type=range] {
+    background: linear-gradient(90deg, var(--gray-light), var(--dark-blue));
+  }
+  .panel-slider input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--fsu-garnet-deep);
+    border: 2px solid #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    cursor: pointer;
+  }
+  .panel.full-sample .panel-slider input[type=range]::-webkit-slider-thumb { background: var(--dark-blue); }
+  .panel-slider input[type=range]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--fsu-garnet-deep);
+    border: 2px solid #fff;
+    cursor: pointer;
+  }
+  .panel.full-sample .panel-slider input[type=range]::-moz-range-thumb { background: var(--dark-blue); }
+  .panel-slider .slider-value {
+    font-family: 'Consolas', monospace;
+    font-weight: 600;
+    font-size: 13px;
+    min-width: 50px;
+    text-align: right;
+    color: var(--fsu-garnet-deep);
+  }
+  .panel.full-sample .panel-slider .slider-value { color: var(--dark-blue); }
+  
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 12px;
+  }
+  .chip {
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--fsu-garnet);
+    background: rgba(120,47,64,0.08);
+    border: 1px solid rgba(120,47,64,0.25);
+    padding: 4px 9px;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .chip:hover { background: rgba(120,47,64,0.16); }
+  .panel.full-sample .chip {
+    color: var(--dark-blue);
+    background: rgba(31,78,121,0.08);
+    border-color: rgba(31,78,121,0.25);
+  }
+  .panel.full-sample .chip:hover { background: rgba(31,78,121,0.16); }
+  
+  .readouts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .readout {
+    background: var(--bg-alt);
+    border: 1px solid var(--gray-xlight);
+    border-radius: 4px;
+    padding: 8px 10px;
+  }
+  .readout .label {
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--gray-med);
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+  .readout .value {
+    font-family: 'Times New Roman', serif;
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.1;
+    color: var(--gray-dark);
+  }
+  .readout .value small {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--gray-med);
+  }
+  .readout.accent .value { color: var(--fsu-garnet); }
+  .panel.full-sample .readout.accent .value { color: var(--dark-blue); }
+  .readout .sub {
+    font-size: 10px;
+    color: var(--gray-med);
+    margin-top: 2px;
+  }
+  
+  .interpretation {
+    background: var(--accent-yellow);
+    border-left: 3px solid var(--accent-yellow-border);
+    padding: 10px 12px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--accent-yellow-text);
+    border-radius: 0 4px 4px 0;
+    min-height: 50px;
+  }
+  .interpretation .v {
+    background: rgba(176,125,43,0.18);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-weight: 700;
+    color: var(--accent-yellow-text);
+    white-space: nowrap;
+  }
+  
+  /* Reference table for full-sample empirical rule fit */
+  .fit-table {
+    margin-top: 10px;
+    border: 1px solid var(--gray-xlight);
+    border-radius: 4px;
+    overflow: hidden;
+    font-size: 12px;
+  }
+  .fit-table .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    border-bottom: 1px solid var(--gray-xlight);
+  }
+  .fit-table .row:last-child { border-bottom: none; }
+  .fit-table .row.head {
+    background: var(--bg-alt);
+    font-weight: 700;
+    color: var(--gray-med);
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .fit-table .cell {
+    padding: 6px 8px;
+    border-right: 1px solid var(--gray-xlight);
+    text-align: center;
+  }
+  .fit-table .cell:last-child { border-right: none; }
+  
+  /* SVG element styles */
+  .hist-bar { fill: #C9C0AE; stroke: #B7AD98; stroke-width: 0.5; }
+  .hist-bar.flagged { fill: #D8B9BE; stroke: #C49AA1; }
+  .hist-bar.in-band { fill: #B3CFE0; stroke: #8FB3C9; }
+  .curve { fill: none; stroke: var(--fsu-garnet); stroke-width: 2; }
+  .curve-blue { fill: none; stroke: var(--dark-blue); stroke-width: 2; }
+  .cutoff-line { stroke: var(--fsu-garnet-deep); stroke-width: 2; }
+  .cutoff-line-blue { stroke: var(--dark-blue); stroke-width: 2; }
+  .cutoff-handle { fill: var(--fsu-garnet-deep); stroke: white; stroke-width: 2; cursor: ew-resize; }
+  .cutoff-handle-blue { fill: var(--dark-blue); stroke: white; stroke-width: 2; cursor: ew-resize; }
+  .mean-line { stroke: var(--gray-med); stroke-width: 1; stroke-dasharray: 3 3; opacity: 0.6; }
+  .axis-label { fill: var(--gray-med); font-size: 10px; font-family: Calibri,sans-serif; }
+  .axis-title { fill: var(--gray-med); font-size: 11px; font-weight: 600; font-family: Calibri,sans-serif; }
+  .sd-marker { stroke: var(--gold-deep); stroke-width: 1; opacity: 0.5; stroke-dasharray: 2 3; }
+  .sd-label { fill: var(--gold-deep); font-size: 9px; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<header class="lesson-title">
+  <div class="course">PAD 5701 · Quantitative Analysis in Public Administration</div>
+  <h1>Week 4 Interactive Lesson: The Normal Curve</h1>
+</header>
+
+<div class="lesson-frame">
+  <p>Understanding the normal curve is the foundation for the rest of this course. Almost everything in inferential statistics, including confidence intervals (Week 6) and hypothesis tests (Weeks 7 and beyond), depends on normal-curve reasoning. This week builds the conceptual machinery the rest of the semester will use.</p>
+</div>
+
+<!-- =========================================
+     STEP 1: NORMAL CURVE AS A MODEL + ETYMOLOGY
+========================================= -->
+<section class="step">
+  <div class="step-header">
+    <span class="step-number">1</span>
+    <h2>The normal curve as a model</h2>
+  </div>
+  <p>The normal curve is a mathematical model, not the data itself. It is an idealized, smooth, symmetric, bell-shaped curve. Real data may approximate this shape closely, somewhat, or not at all. When real data approximates the shape, the normal curve becomes a useful tool for reasoning about how unusual specific values are.</p>
+  <p>Every normal curve shares the same fundamental properties: it is symmetric, has a single peak in the middle (where the mean, median, and mode coincide), and its tails extend outward in both directions without ever quite touching the x-axis. The total area under any normal curve equals 1.00, or 100% of the data.</p>
+  <p>What changes from one normal curve to another is only the position of the center and the width of the spread. The mean fixes the position (where the peak sits on the x-axis), and the standard deviation fixes the spread (how wide or narrow the bell is). Two numbers, the mean and the standard deviation, fully describe any specific normal curve.</p>
+  
+  <h3 style="color: var(--dark-blue); font-size: 17px; margin-top: 20px;">Why "normal"?</h3>
+  <p>The curve is called the <em>normal</em> curve, though the exact origin of the term is debated. The most common explanation is that many naturally occurring measurements (heights, blood pressure, errors in physical experiments) tend to follow this bell shape closely enough that early statisticians treated it as the typical or expected distribution. Karl Pearson, one of the term's most influential popularizers, later wrote that he regretted the choice because it implied other distributions were <em>abnormal</em>, which was never the intent. Whatever its precise origin, "normal" does not mean "good" or "right" or "typical" in any value-laden sense. It just means this bell shape happens to appear often enough in measurement contexts that statisticians named it.</p>
+</section>
+
+<!-- =========================================
+     STEP 2: MEAN, SD, Z-SCORES (with interactive)
+========================================= -->
+<section class="step">
+  <div class="step-header">
+    <span class="step-number">2</span>
+    <h2>Mean, SD, and Z-scores</h2>
+  </div>
+  <p>Two numbers fully determine any normal curve. The mean determines where the curve sits on the horizontal axis. The standard deviation sets how wide the bell is.</p>
+  <p>Use the controls below to explore how changing either or both of these numbers affects a normal curve directly. Slide the mean to move the curve left or right. Slide the SD to make the bell wider or narrower. The numeric inputs let you type specific values if you want to test something exact.</p>
+  
+  <div class="curve-widget">
+    <h3>Build your own normal curve</h3>
+    <p class="subtitle">Adjust the mean and SD to see how the curve repositions and reshapes. The gold reference markers show ±1 SD and ±2 SD from the current mean.</p>
+    
+    <div class="viz">
+      <svg id="interactive-curve-svg" viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    
+    <div class="ctrl-row">
+      <label for="ic-mean-slider">Mean (days):</label>
+      <input type="range" id="ic-mean-slider" min="0" max="18" step="0.1" value="6.53">
+      <input type="number" id="ic-mean-input" min="0" max="18" step="0.1" value="6.53">
+    </div>
+    <div class="ctrl-row">
+      <label for="ic-sd-slider">SD (days):</label>
+      <input type="range" id="ic-sd-slider" min="0.5" max="6" step="0.1" value="3.66">
+      <input type="number" id="ic-sd-input" min="0.5" max="6" step="0.1" value="3.66">
+    </div>
+    
+    <div class="preset-row">
+      <span class="preset-label">Quick-set to:</span>
+      <button class="preset-chip" data-mean="6.53" data-sd="3.66">Full pilot sample</button>
+      <button class="preset-chip" data-mean="5.04" data-sd="2.75">Treatment subgroup</button>
+      <button class="preset-chip" data-mean="8.01" data-sd="3.86">Control subgroup</button>
+      <button class="preset-chip" data-mean="9" data-sd="1">Narrow, centered at 9</button>
+      <button class="preset-chip" data-mean="9" data-sd="4">Wide, centered at 9</button>
+    </div>
+  </div>
+  
+  <h3 style="color: var(--dark-blue); font-size: 17px; margin-top: 24px;">Z-scores: standardization on the curve</h3>
+  <p>A Z-score tells you how many standard deviations a raw value sits from the mean. The formula:</p>
+  
+  <div class="formula">
+    <strong>Z</strong> = (<em>X</em><sub>i</sub> − <span class="xbar">X</span>) / <em>s</em>
+  </div>
+  
+  <p>Where <em>X</em><sub>i</sub> is the raw value (any data point), <span class="xbar">X</span> is the sample mean, and <em>s</em> is the sample standard deviation.</p>
+  <p>The Z-score replaces a raw value with a position. Whatever the original scale (dollars, percentages, days, scores), the Z-score expresses how unusual the value is in standard-deviation units. Z = 0 sits at the mean. Z = +1 sits one SD above the mean. Z = −2 sits two SDs below.</p>
+  <p>This is the move that lets you compare values across measurements that use completely different scales. A state's vaccination rate (a percentage), its per-pupil school spending (dollars), and its child poverty rate (a different percentage) are all measured on different scales. Raw values cannot be compared directly. Z-scores can, because they put every measurement on the same "how unusual is this" scale.</p>
+</section>
+  
+  <h3 style="color: var(--dark-blue); font-size: 17px; margin-top: 20px;">The empirical rule (68-95-99.7)</h3>
+  <p>Because every normal curve has the same shape, the same proportion of the data always falls within the same Z-distance from the mean. Three reference values are worth memorizing:</p>
+  <ul>
+    <li>About <strong>68%</strong> of the data falls within ±1 SD of the mean (between Z = −1 and Z = +1).</li>
+    <li>About <strong>95%</strong> of the data falls within ±2 SD of the mean (between Z = −2 and Z = +2).</li>
+    <li>About <strong>99.7%</strong> of the data falls within ±3 SD of the mean (between Z = −3 and Z = +3).</li>
+  </ul>
+  <p>This is called the <strong>empirical rule</strong> (also known as the 68-95-99.7 rule). Once you know your data is approximately normal and you know the mean and SD, you can immediately characterize any value's position within the distribution.</p>
+  
+  <div class="callout">
+    <div class="callout-label">Shape vs. scale</div>
+    <p style="margin: 0;">The 68-95-99.7 percentages are properties of the <em>shape</em> of any normal curve. They hold regardless of what the specific mean and standard deviation are. Whether your data are days absent in the childcare pilot (mean = 6.53, SD = 3.66), median household income in a Florida county (around $60,000 with SD around $25,000), or scores on a state-administered 4th-grade reading assessment (often around 50 with SD around 10), if the data are approximately normal, then about 68% of values fall within ±1 SD of <em>that</em> distribution's mean. The percentages do not change. What changes from one distribution to another is the raw value that corresponds to ±1 SD.</p>
+  </div>
+<!-- =========================================
+     STEP 5: THE NORMAL CURVE EXPLORER (consolidated)
+========================================= -->
+<section class="step">
+  <div class="step-header">
+    <span class="step-number">5</span>
+    <h2>The Normal Curve Explorer</h2>
+  </div>
+  
+  
+  <h3 style="color: var(--dark-blue); font-size: 17px; margin-top: 24px;">The Explorer</h3>
+  <p>The three panels below let you explore how Z-scores, raw values, and tail areas relate to the actual childcare pilot data. The <strong>full-sample panel</strong> sits at the top: it tests the empirical rule against the actual data by showing the symmetric band around the mean and comparing the model's predicted count with the count observed in the data. The <strong>two subgroup panels</strong> below split the same 500 employees by work schedule and use a one-sided cutoff to show how the same Z-score corresponds to different raw values across the two subgroups.</p>
+  
+  <div class="explorer-section">
+    <!-- FULL SAMPLE PANEL: empirical rule (symmetric band) -->
+    <div class="panel full-sample" data-panel="full">
+      <div class="panel-header">
+        <div class="title">Full childcare pilot sample (empirical rule mode)</div>
+        <div class="stats">Mean = 6.53 days · SD = 3.66 · n = 500</div>
+      </div>
+      <div class="panel-body">
+        <div class="panel-chart">
+          <svg id="full-chart" viewBox="0 0 800 220" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+        <div class="panel-slider">
+          <span class="slider-label">Z-distance:</span>
+          <input type="range" id="full-slider" min="0.1" max="3.5" step="0.1" value="1.0">
+          <span class="slider-value" id="full-slider-value">±1.0</span>
+        </div>
+        <div class="chips" data-chips="full">
+          <button class="chip" data-z="1">±1 SD</button>
+          <button class="chip" data-z="2">±2 SD</button>
+          <button class="chip" data-z="3">±3 SD</button>
+        </div>
+        <div class="readouts">
+          <div class="readout"><div class="label">Z-distance</div><div class="value" id="full-ro-z">±1.00</div></div>
+          <div class="readout"><div class="label">Raw range (days)</div><div class="value" id="full-ro-range" style="font-size: 16px;">2.87 to 10.19</div></div>
+          <div class="readout accent"><div class="label">Model: within band</div><div class="value" id="full-ro-modelpct">68.3<small>%</small></div><div class="sub" id="full-ro-modeln">about 341 of 500</div></div>
+          <div class="readout accent"><div class="label">Actual: within band</div><div class="value" id="full-ro-actual">338</div><div class="sub" id="full-ro-actualpct">67.6% of 500</div></div>
+        </div>
+        <div class="interpretation" id="full-interp"></div>
+        
+        <div style="margin-top: 14px;">
+          <div style="font-size: 12px; font-weight: 700; color: var(--gray-med); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">Reference: how well the normal model fits the childcare pilot data</div>
+          <div class="fit-table">
+            <div class="row head">
+              <div class="cell">Band</div>
+              <div class="cell">Model %</div>
+              <div class="cell">Model count</div>
+              <div class="cell">Actual count</div>
+            </div>
+            <div class="row">
+              <div class="cell">±1 SD</div>
+              <div class="cell">68.3%</div>
+              <div class="cell">341</div>
+              <div class="cell">338</div>
+            </div>
+            <div class="row">
+              <div class="cell">±2 SD</div>
+              <div class="cell">95.4%</div>
+              <div class="cell">477</div>
+              <div class="cell">483</div>
+            </div>
+            <div class="row">
+              <div class="cell">±3 SD</div>
+              <div class="cell">99.7%</div>
+              <div class="cell">499</div>
+              <div class="cell">500</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- TWO SUBGROUP PANELS: one-sided cutoff -->
+    <div class="explorer-grid">
+      <div class="panel" data-panel="std">
+        <div class="panel-header">
+          <div class="title">Standard-hours employees</div>
+          <div class="stats">Mean = 5.90 days · SD = 3.37 · n = 250</div>
+        </div>
+        <div class="panel-body">
+          <div class="panel-chart">
+            <svg id="std-chart" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg"></svg>
+          </div>
+          <div class="mode-toggle" data-toggle="std">
+            <button data-mode="cut" class="active">Set a cutoff</button>
+            <button data-mode="pct">Flag worst %</button>
+          </div>
+          <div class="panel-slider">
+            <span class="slider-label" id="std-slider-label">Cutoff (days)</span>
+            <input type="range" id="std-slider" min="0" max="18" step="0.1" value="9.27">
+            <span class="slider-value" id="std-slider-value">9.3</span>
+          </div>
+          <div class="chips" data-chips="std">
+            <button class="chip" data-p="5">Worst 5%</button>
+            <button class="chip" data-p="10">Worst 10%</button>
+            <button class="chip" data-p="25">Worst 25%</button>
+            <button class="chip" data-sd="1">+1 SD</button>
+            <button class="chip" data-sd="2">+2 SD</button>
+          </div>
+          <div class="readouts">
+            <div class="readout"><div class="label">Cutoff</div><div class="value" id="std-ro-cut">9.3<small> days</small></div></div>
+            <div class="readout"><div class="label">Z-score</div><div class="value" id="std-ro-z">+1.00</div></div>
+            <div class="readout accent"><div class="label">Area beyond</div><div class="value" id="std-ro-area">15.9<small>%</small></div></div>
+            <div class="readout accent"><div class="label">Employees flagged</div><div class="value" id="std-ro-n">40</div><div class="sub" id="std-ro-nsub">model · actual: -</div></div>
+          </div>
+          <div class="interpretation" id="std-interp"></div>
+        </div>
+      </div>
+      
+      <div class="panel" data-panel="ns">
+        <div class="panel-header">
+          <div class="title">Non-standard-hours employees</div>
+          <div class="stats">Mean = 7.16 days · SD = 3.84 · n = 250</div>
+        </div>
+        <div class="panel-body">
+          <div class="panel-chart">
+            <svg id="ns-chart" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg"></svg>
+          </div>
+          <div class="mode-toggle" data-toggle="ns">
+            <button data-mode="cut" class="active">Set a cutoff</button>
+            <button data-mode="pct">Flag worst %</button>
+          </div>
+          <div class="panel-slider">
+            <span class="slider-label" id="ns-slider-label">Cutoff (days)</span>
+            <input type="range" id="ns-slider" min="0" max="18" step="0.1" value="11.0">
+            <span class="slider-value" id="ns-slider-value">11.0</span>
+          </div>
+          <div class="chips" data-chips="ns">
+            <button class="chip" data-p="5">Worst 5%</button>
+            <button class="chip" data-p="10">Worst 10%</button>
+            <button class="chip" data-p="25">Worst 25%</button>
+            <button class="chip" data-sd="1">+1 SD</button>
+            <button class="chip" data-sd="2">+2 SD</button>
+          </div>
+          <div class="readouts">
+            <div class="readout"><div class="label">Cutoff</div><div class="value" id="ns-ro-cut">11.0<small> days</small></div></div>
+            <div class="readout"><div class="label">Z-score</div><div class="value" id="ns-ro-z">+1.00</div></div>
+            <div class="readout accent"><div class="label">Area beyond</div><div class="value" id="ns-ro-area">15.9<small>%</small></div></div>
+            <div class="readout accent"><div class="label">Employees flagged</div><div class="value" id="ns-ro-n">40</div><div class="sub" id="ns-ro-nsub">model · actual: -</div></div>
+          </div>
+          <div class="interpretation" id="ns-interp"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <p>Compare the two subgroup panels. The same Z-score (say, Z = +1.0) corresponds to different raw days-absent values in the two subgroups (9.3 days for standard-hours, 11.0 days for non-standard-hours). The same raw value (say, 12 days) corresponds to different Z-scores. This is the standardization concept made visible: how unusual a value is depends on which distribution it came from.</p>
+</section>
+
+<!-- =========================================
+     STEP 6: CLT PREVIEW
+========================================= -->
+<section class="step">
+  <div class="step-header">
+    <span class="step-number">6</span>
+    <h2>Looking ahead: the Central Limit Theorem</h2>
+  </div>
+  <p>You have now seen what the normal curve is, when it applies, and how to translate values into Z-scores. Next week, this foundation supports a larger move: using the normal curve to make inferences about populations from samples.</p>
+  <p>The key tool is the <strong>Central Limit Theorem (CLT)</strong>, which says that even when the underlying data is not normally distributed, the distribution of <em>repeated sample means</em> drawn from the population of interest becomes approximately normal as the number of samples drawn from the population grows. This is why normal-curve methods can be applied to data like income (right-skewed) or arrest counts (right-skewed and discrete), as long as the analysis is working with means of large samples rather than individual values.</p>
+  <p>The CLT is what makes most of inferential statistics possible. We will cover it in detail in Week 5. For now, the takeaway: the normal curve is not just a model for individual data. It is also a model for what happens when you sample from any distribution repeatedly. That bridge from "individual values" to "sample means" is what turns the normal curve from a descriptive tool into an inferential one.</p>
+</section>
+
+<script>
+// ============================================================
+// MATH UTILITIES
+// ============================================================
+function normPDF(z) {
+  return Math.exp(-0.5 * z * z) / Math.sqrt(2 * Math.PI);
+}
+function erf(x) {
+  const sign = x < 0 ? -1 : 1;
+  x = Math.abs(x);
+  const t = 1.0 / (1.0 + 0.3275911 * x);
+  const y = 1.0 - (((((1.061405429 * t - 1.453152027) * t + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t) * Math.exp(-x * x);
+  return sign * y;
+}
+function normCDF(z) {
+  return 0.5 * (1 + erf(z / Math.sqrt(2)));
+}
+function invNorm(p) {
+  const a = [-39.6968302866538, 220.946098424521, -275.928510446969, 138.357751867269, -30.6647980661472, 2.50662827745924];
+  const b = [-54.4760987982241, 161.585836858041, -155.698979859887, 66.8013118877197, -13.2806815528857];
+  const c = [-0.00778489400243029, -0.322396458041136, -2.40075827716184, -2.54973253934373, 4.37466414146497, 2.93816398269878];
+  const d = [0.00778469570904146, 0.32246712907004, 2.445134137143, 3.75440866190742];
+  const pl = 0.02425, ph = 1 - pl;
+  let q, r;
+  if (p < pl) {
+    q = Math.sqrt(-2 * Math.log(p));
+    return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) / ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+  }
+  if (p <= ph) {
+    q = p - 0.5; r = q*q;
+    return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q / (((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1);
+  }
+  q = Math.sqrt(-2*Math.log(1-p));
+  return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) / ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+}
+
+// ============================================================
+// HISTOGRAM DRAWING (Steps 2 and 3)
+// ============================================================
+const HIST_DATA = {
+  overall: [28, 27, 27, 46, 51, 53, 51, 53, 36, 40, 27, 19, 13, 12, 9, 4, 2, 2],
+  treatment: [20, 21, 16, 32, 28, 40, 31, 23, 16, 11, 9, 3, 0, 0, 0, 0, 0, 0],
+  control: [8, 6, 11, 14, 23, 13, 20, 30, 20, 29, 18, 16, 13, 12, 9, 4, 2, 2]
+};
+const HIST_MAX_X = 18;
+
+function drawHistogram(svgId, bins, opts) {
+  const svg = document.getElementById(svgId);
+  if (!svg) return;
+  const padding = opts.padding || 40;
+  const viewWidth = opts.viewWidth;
+  const viewHeight = opts.viewHeight;
+  const axisY = viewHeight - padding;
+  const topY = 20;
+  const usableHeight = axisY - topY;
+  const usableWidth = viewWidth - 2 * padding;
+  const binWidth = usableWidth / bins.length;
+  const maxBin = opts.maxBin || Math.max(...bins);
+  const barColor = opts.barColor || 'rgba(31,78,121,0.55)';
+  const barStroke = opts.barStroke || '#1F4E79';
+  
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  const NS = 'http://www.w3.org/2000/svg';
+  
+  for (let i = 0; i < bins.length; i++) {
+    if (bins[i] === 0) continue;
+    const x = padding + i * binWidth;
+    const h = (bins[i] / maxBin) * usableHeight;
+    const y = axisY - h;
+    const rect = document.createElementNS(NS, 'rect');
+    rect.setAttribute('x', x.toFixed(2));
+    rect.setAttribute('y', y.toFixed(2));
+    rect.setAttribute('width', (binWidth - 1).toFixed(2));
+    rect.setAttribute('height', h.toFixed(2));
+    rect.setAttribute('fill', barColor);
+    rect.setAttribute('stroke', barStroke);
+    rect.setAttribute('stroke-width', '0.5');
+    svg.appendChild(rect);
+  }
+  
+  const axisLine = document.createElementNS(NS, 'line');
+  axisLine.setAttribute('x1', padding);
+  axisLine.setAttribute('y1', axisY);
+  axisLine.setAttribute('x2', viewWidth - padding);
+  axisLine.setAttribute('y2', axisY);
+  axisLine.setAttribute('stroke', '#666');
+  axisLine.setAttribute('stroke-width', '1.5');
+  svg.appendChild(axisLine);
+  
+  const tickValues = opts.tickValues || [0, 5, 10, 15];
+  for (const t of tickValues) {
+    const x = padding + (t / HIST_MAX_X) * usableWidth;
+    const tick = document.createElementNS(NS, 'line');
+    tick.setAttribute('x1', x); tick.setAttribute('y1', axisY);
+    tick.setAttribute('x2', x); tick.setAttribute('y2', axisY + 4);
+    tick.setAttribute('stroke', '#666');
+    svg.appendChild(tick);
+    const label = document.createElementNS(NS, 'text');
+    label.setAttribute('x', x); label.setAttribute('y', axisY + 14);
+    label.setAttribute('text-anchor', 'middle');
+    label.setAttribute('font-size', '10');
+    label.setAttribute('font-family', 'Calibri,sans-serif');
+    label.setAttribute('fill', '#666');
+    label.textContent = t;
+    svg.appendChild(label);
+  }
+  
+  const xtitle = document.createElementNS(NS, 'text');
+  xtitle.setAttribute('x', viewWidth / 2);
+  xtitle.setAttribute('y', viewHeight - 4);
+  xtitle.setAttribute('text-anchor', 'middle');
+  xtitle.setAttribute('font-size', '11');
+  xtitle.setAttribute('font-family', 'Calibri,sans-serif');
+  xtitle.setAttribute('fill', '#666');
+  xtitle.textContent = 'Days absent';
+  svg.appendChild(xtitle);
+  
+  const ytitle = document.createElementNS(NS, 'text');
+  ytitle.setAttribute('x', 12);
+  ytitle.setAttribute('y', viewHeight / 2);
+  ytitle.setAttribute('text-anchor', 'middle');
+  ytitle.setAttribute('font-size', '11');
+  ytitle.setAttribute('font-family', 'Calibri,sans-serif');
+  ytitle.setAttribute('fill', '#666');
+  ytitle.setAttribute('transform', 'rotate(-90 12 ' + (viewHeight / 2) + ')');
+  ytitle.textContent = 'Number of employees';
+  svg.appendChild(ytitle);
+  
+  if (opts.overlay) {
+    const { mean, sd, n } = opts.overlay;
+    let d = '';
+    const points = 200;
+    for (let i = 0; i <= points; i++) {
+      const x_val = HIST_MAX_X * i / points;
+      const z = (x_val - mean) / sd;
+      const density = normPDF(z) / sd;
+      const expected_count = density * 1 * n;
+      const x_px = padding + (x_val / HIST_MAX_X) * usableWidth;
+      const y_px = axisY - (expected_count / maxBin) * usableHeight;
+      d += (i === 0 ? 'M' : 'L') + x_px.toFixed(2) + ',' + y_px.toFixed(2) + ' ';
+    }
+    const curve = document.createElementNS(NS, 'path');
+    curve.setAttribute('d', d);
+    curve.setAttribute('fill', 'none');
+    curve.setAttribute('stroke', '#782F40');
+    curve.setAttribute('stroke-width', '2.5');
+    svg.appendChild(curve);
+  }
+}
+
+function drawAllHistograms() {
+  drawHistogram('hist-overall', HIST_DATA.overall, {
+    viewWidth: 700, viewHeight: 280, padding: 40,
+    barColor: 'rgba(31,78,121,0.55)', barStroke: '#1F4E79'
+  });
+  drawHistogram('hist-treatment', HIST_DATA.treatment, {
+    viewWidth: 360, viewHeight: 240, padding: 30,
+    barColor: 'rgba(46,125,50,0.5)', barStroke: '#2E7D32'
+  });
+  drawHistogram('hist-control', HIST_DATA.control, {
+    viewWidth: 360, viewHeight: 240, padding: 30,
+    barColor: 'rgba(198,40,40,0.5)', barStroke: '#C62828'
+  });
+  drawHistogram('hist-overall-overlay', HIST_DATA.overall, {
+    viewWidth: 700, viewHeight: 280, padding: 40,
+    barColor: 'rgba(31,78,121,0.35)', barStroke: '#1F4E79',
+    overlay: { mean: 6.53, sd: 3.66, n: 500 }
+  });
+  drawHistogram('hist-treatment-overlay', HIST_DATA.treatment, {
+    viewWidth: 360, viewHeight: 240, padding: 30,
+    barColor: 'rgba(46,125,50,0.3)', barStroke: '#2E7D32',
+    overlay: { mean: 5.04, sd: 2.75, n: 250 }
+  });
+  drawHistogram('hist-control-overlay', HIST_DATA.control, {
+    viewWidth: 360, viewHeight: 240, padding: 30,
+    barColor: 'rgba(198,40,40,0.3)', barStroke: '#C62828',
+    overlay: { mean: 8.01, sd: 3.86, n: 250 }
+  });
+}
+
+// ============================================================
+// STEP 4 INTERACTIVE CURVE (one curve, mean and SD sliders)
+// ============================================================
+const IC = { mean: 6.53, sd: 3.66 };
+const IC_VIEW = { W: 700, H: 280, ML: 50, MR: 30, MT: 30, MB: 40 };
+IC_VIEW.PW = IC_VIEW.W - IC_VIEW.ML - IC_VIEW.MR;
+IC_VIEW.PH = IC_VIEW.H - IC_VIEW.MT - IC_VIEW.MB;
+const IC_XMIN = 0, IC_XMAX = 24; // give room when mean is near 18
+
+function drawInteractiveCurve() {
+  const svg = document.getElementById('interactive-curve-svg');
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  const NS = 'http://www.w3.org/2000/svg';
+  function elem(tag, attrs) {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  
+  const xS = v => IC_VIEW.ML + (v - IC_XMIN) / (IC_XMAX - IC_XMIN) * IC_VIEW.PW;
+  // Normalize so peak fills the available height regardless of SD
+  const peakPDF = normPDF(0) / IC.sd;
+  const yS = density => IC_VIEW.MT + IC_VIEW.PH - (density / peakPDF) * IC_VIEW.PH;
+  
+  // Shaded area under curve
+  let shadeD = '';
+  const points = 200;
+  for (let i = 0; i <= points; i++) {
+    const x = IC_XMIN + (IC_XMAX - IC_XMIN) * i / points;
+    const z = (x - IC.mean) / IC.sd;
+    const density = normPDF(z) / IC.sd;
+    shadeD += (i === 0 ? 'M' : 'L') + xS(x).toFixed(2) + ',' + yS(density).toFixed(2) + ' ';
+  }
+  shadeD += 'L' + xS(IC_XMAX).toFixed(2) + ',' + yS(0).toFixed(2) + ' ';
+  shadeD += 'L' + xS(IC_XMIN).toFixed(2) + ',' + yS(0).toFixed(2) + ' Z';
+  svg.appendChild(elem('path', { d: shadeD, fill: 'rgba(31,78,121,0.18)' }));
+  
+  // Curve
+  let curveD = '';
+  for (let i = 0; i <= points; i++) {
+    const x = IC_XMIN + (IC_XMAX - IC_XMIN) * i / points;
+    const z = (x - IC.mean) / IC.sd;
+    const density = normPDF(z) / IC.sd;
+    curveD += (i === 0 ? 'M' : 'L') + xS(x).toFixed(2) + ',' + yS(density).toFixed(2) + ' ';
+  }
+  svg.appendChild(elem('path', { d: curveD, fill: 'none', stroke: '#1F4E79', 'stroke-width': 2.5 }));
+  
+  // SD markers (±1 SD and ±2 SD)
+  for (let k of [-2, -1, 1, 2]) {
+    const xVal = IC.mean + k * IC.sd;
+    if (xVal < IC_XMIN || xVal > IC_XMAX) continue;
+    const x = xS(xVal);
+    svg.appendChild(elem('line', {
+      x1: x, y1: IC_VIEW.MT, x2: x, y2: yS(0), class: 'sd-marker'
+    }));
+    const lbl = elem('text', {
+      x: x, y: IC_VIEW.MT - 4, 'text-anchor': 'middle', class: 'sd-label'
+    });
+    lbl.textContent = (k > 0 ? '+' : '') + k + ' SD';
+    svg.appendChild(lbl);
+  }
+  
+  // Mean line
+  const meanX = xS(IC.mean);
+  svg.appendChild(elem('line', {
+    x1: meanX, y1: IC_VIEW.MT, x2: meanX, y2: yS(0), class: 'mean-line', stroke: '#666', 'stroke-width': 1.5
+  }));
+  const meanLabel = elem('text', {
+    x: meanX, y: IC_VIEW.MT - 18, 'text-anchor': 'middle',
+    'font-size': 12, 'font-family': 'Calibri,sans-serif', fill: '#666', 'font-weight': 600
+  });
+  meanLabel.textContent = 'Mean = ' + IC.mean.toFixed(2);
+  svg.appendChild(meanLabel);
+  
+  // X-axis
+  svg.appendChild(elem('line', {
+    x1: IC_VIEW.ML, y1: yS(0), x2: IC_VIEW.W - IC_VIEW.MR, y2: yS(0), stroke: '#888', 'stroke-width': 1.2
+  }));
+  for (let v = 0; v <= 24; v += 4) {
+    const x = xS(v);
+    svg.appendChild(elem('line', { x1: x, y1: yS(0), x2: x, y2: yS(0) + 4, stroke: '#888' }));
+    const lbl = elem('text', {
+      x: x, y: yS(0) + 17, 'text-anchor': 'middle', class: 'axis-label'
+    });
+    lbl.textContent = v;
+    svg.appendChild(lbl);
+  }
+  const xt = elem('text', {
+    x: IC_VIEW.ML + IC_VIEW.PW/2, y: IC_VIEW.H - 8, 'text-anchor': 'middle', class: 'axis-title'
+  });
+  xt.textContent = 'Days absent';
+  svg.appendChild(xt);
+}
+
+function setupInteractiveCurve() {
+  const meanSlider = document.getElementById('ic-mean-slider');
+  const meanInput = document.getElementById('ic-mean-input');
+  const sdSlider = document.getElementById('ic-sd-slider');
+  const sdInput = document.getElementById('ic-sd-input');
+  
+  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+  
+  function update(meanVal, sdVal) {
+    IC.mean = clamp(meanVal, 0, 18);
+    IC.sd = clamp(sdVal, 0.5, 6);
+    meanSlider.value = IC.mean;
+    meanInput.value = IC.mean.toFixed(2);
+    sdSlider.value = IC.sd;
+    sdInput.value = IC.sd.toFixed(2);
+    drawInteractiveCurve();
+  }
+  
+  meanSlider.addEventListener('input', e => update(parseFloat(e.target.value), IC.sd));
+  meanInput.addEventListener('input', e => {
+    const v = parseFloat(e.target.value);
+    if (!isNaN(v)) update(v, IC.sd);
+  });
+  sdSlider.addEventListener('input', e => update(IC.mean, parseFloat(e.target.value)));
+  sdInput.addEventListener('input', e => {
+    const v = parseFloat(e.target.value);
+    if (!isNaN(v)) update(IC.mean, v);
+  });
+  
+  // Preset chips
+  document.querySelectorAll('.preset-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const m = parseFloat(chip.dataset.mean);
+      const s = parseFloat(chip.dataset.sd);
+      update(m, s);
+    });
+  });
+  
+  drawInteractiveCurve();
+}
+
+// ============================================================
+// STEP 5 FULL-SAMPLE EMPIRICAL RULE PANEL
+// ============================================================
+const FULL = {
+  data: null, // populated below
+  mean: 6.5282, sd: 3.6648, n: 500,
+  zRange: 1.0
+};
+// Full sample data: combine STD_DATA and NS_DATA later
+const STD_DATA = [9.8,9.7,7.3,9.2,9.8,0.0,4.3,9.9,8.1,6.5,4.2,6.1,11.0,5.2,8.7,8.1,7.9,4.7,9.7,12.8,4.0,5.6,3.9,12.9,1.8,14.4,3.9,5.7,7.5,14.2,3.5,6.8,8.1,10.1,1.4,3.0,13.3,4.2,0.0,8.0,9.0,14.1,1.5,6.3,11.2,9.4,1.7,2.6,9.1,5.6,10.6,8.6,10.2,7.8,0.0,6.3,10.8,2.7,13.4,3.2,4.9,7.5,3.6,4.3,7.0,13.1,4.1,4.6,2.2,4.2,5.5,6.8,8.5,12.5,7.8,10.0,6.9,7.0,7.1,5.9,2.2,3.3,0.0,3.9,7.4,12.9,4.0,6.9,8.1,6.6,0.0,2.0,4.3,4.0,10.5,2.9,14.5,6.8,5.1,10.5,3.2,1.4,15.8,4.0,7.1,4.5,4.1,11.0,7.3,6.2,8.0,6.7,12.0,16.7,10.6,8.2,0.0,4.8,2.2,9.7,6.6,10.1,7.6,7.3,2.5,0.8,4.7,5.6,5.0,4.8,2.8,7.8,0.9,5.5,4.4,4.3,2.6,0.0,4.0,6.3,4.4,7.1,1.8,3.0,5.8,6.4,4.2,5.5,5.1,2.3,8.6,10.4,6.5,5.7,3.5,8.9,3.2,4.6,0.1,7.6,11.5,5.9,2.6,6.6,2.1,2.0,5.0,5.7,8.1,1.2,1.2,3.7,2.2,5.4,8.3,6.9,6.2,9.8,3.6,6.6,0.3,3.5,1.1,3.0,6.6,10.3,2.5,0.0,6.3,8.5,3.7,8.0,5.5,6.3,3.4,4.1,4.1,2.8,3.5,6.2,3.0,1.4,1.5,10.0,5.8,4.6,7.5,7.3,6.7,5.9,3.1,8.6,6.3,1.7,3.9,1.9,3.6,2.8,8.3,5.0,3.8,3.0,5.0,6.2,9.9,6.3,2.2,6.7,2.3,5.0,9.0,1.8,6.0,5.0,1.0,6.9,2.2,8.1,7.3,7.2,7.2,4.6,5.1,5.1,7.2,0.0,3.1,10.4,5.6,7.1];
+const NS_DATA = [12.7,12.5,8.4,17.2,11.9,4.4,11.7,13.6,14.4,3.8,15.2,7.7,3.1,11.8,9.3,9.9,14.3,17.0,10.3,3.8,8.4,2.2,9.3,1.9,10.3,11.7,12.8,7.9,7.9,14.6,6.2,9.5,4.4,10.0,9.2,7.3,8.1,7.0,10.3,8.7,5.2,7.3,10.9,4.3,12.1,15.5,13.6,0.3,4.6,14.4,10.0,7.7,3.5,12.1,13.7,9.2,9.4,11.8,9.8,10.9,6.2,7.1,7.4,8.2,8.6,16.4,5.2,4.3,11.4,11.7,11.0,13.0,0.0,5.6,13.7,9.9,9.4,2.2,8.1,13.7,8.1,7.1,15.1,9.9,7.3,5.3,7.8,13.2,5.3,11.3,11.5,6.8,13.5,13.1,7.2,9.6,9.0,9.9,9.6,8.2,3.0,6.6,8.3,7.9,11.2,9.3,10.7,5.7,11.0,6.3,14.4,7.3,12.9,6.9,2.8,9.7,12.7,11.3,4.7,9.0,9.4,12.0,6.3,10.6,7.9,5.8,1.3,0.6,8.4,4.7,1.7,6.0,5.7,7.2,4.9,3.9,6.9,8.6,2.6,1.6,5.8,2.0,6.6,1.7,10.2,0.0,11.5,0.9,4.0,1.4,5.1,4.4,5.0,5.4,8.9,7.3,3.2,5.9,7.6,6.0,4.8,1.5,7.0,9.3,6.9,5.9,0.6,4.6,4.2,9.4,7.1,3.9,0.0,0.0,9.2,3.9,4.3,5.4,9.9,1.3,6.6,3.8,4.2,9.3,0.0,3.3,6.9,6.9,3.9,7.3,3.0,7.1,7.3,4.4,9.0,5.5,5.3,1.7,0.0,6.0,10.5,10.7,3.5,4.1,7.7,0.0,5.5,4.0,8.2,0.9,3.2,8.0,1.9,6.2,6.1,6.4,4.7,7.3,3.2,9.6,4.4,1.1,0.7,8.0,3.4,10.9,0.0,5.4,5.2,3.9,5.5,5.2,3.7,5.2,8.1,3.9,10.1,2.8,1.1,4.7,9.0,0.8,5.8,6.1,5.6,7.1,4.3,11.7,7.3,7.0];
+FULL.data = STD_DATA.concat(NS_DATA);
+
+const FULL_VIEW = { W: 800, H: 220, ML: 40, MR: 16, MT: 16, MB: 32 };
+FULL_VIEW.PW = FULL_VIEW.W - FULL_VIEW.ML - FULL_VIEW.MR;
+FULL_VIEW.PH = FULL_VIEW.H - FULL_VIEW.MT - FULL_VIEW.MB;
+const FULL_XMIN = 0, FULL_XMAX = 18, FULL_BW = 1;
+
+function binDataGeneric(data, xmin, xmax, bw) {
+  const nb = (xmax - xmin) / bw;
+  const bins = new Array(nb).fill(0);
+  data.forEach(v => {
+    let i = Math.floor((v - xmin) / bw);
+    if (i >= nb) i = nb - 1;
+    if (i < 0) i = 0;
+    bins[i]++;
+  });
+  return bins;
+}
+
+function pdfAtX(x, mean, sd) {
+  const z = (x - mean) / sd;
+  return Math.exp(-0.5 * z * z) / (sd * Math.sqrt(2 * Math.PI));
+}
+
+function drawFullChart() {
+  const svg = document.getElementById('full-chart');
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  const NS = 'http://www.w3.org/2000/svg';
+  function elem(tag, attrs) {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  
+  const bins = binDataGeneric(FULL.data, FULL_XMIN, FULL_XMAX, FULL_BW);
+  const maxBin = Math.max(...bins);
+  const curvePeak = pdfAtX(FULL.mean, FULL.mean, FULL.sd) * FULL_BW * FULL.n;
+  const yMax = Math.max(maxBin, curvePeak) * 1.08;
+  
+  const xS = v => FULL_VIEW.ML + (v - FULL_XMIN) / (FULL_XMAX - FULL_XMIN) * FULL_VIEW.PW;
+  const yS = c => FULL_VIEW.MT + FULL_VIEW.PH - (c / yMax) * FULL_VIEW.PH;
+  
+  const loEdge = FULL.mean - FULL.zRange * FULL.sd;
+  const hiEdge = FULL.mean + FULL.zRange * FULL.sd;
+  
+  // Histogram bars (mark bars within the band differently)
+  bins.forEach((c, i) => {
+    const x0 = FULL_XMIN + i * FULL_BW;
+    const xCenter = x0 + FULL_BW/2;
+    const inBand = (xCenter >= loEdge && xCenter <= hiEdge);
+    svg.appendChild(elem('rect', {
+      x: xS(x0) + 0.5,
+      y: yS(c),
+      width: (xS(x0 + FULL_BW) - xS(x0)) - 1,
+      height: yS(0) - yS(c),
+      class: 'hist-bar' + (inBand ? ' in-band' : '')
+    }));
+  });
+  
+  // Shaded band area under curve (lo to hi)
+  let bandD = 'M' + xS(loEdge).toFixed(2) + ',' + yS(0).toFixed(2);
+  for (let i = 0; i <= 80; i++) {
+    const x = loEdge + (hiEdge - loEdge) * i / 80;
+    const y = pdfAtX(x, FULL.mean, FULL.sd) * FULL_BW * FULL.n;
+    bandD += 'L' + xS(x).toFixed(2) + ',' + yS(y).toFixed(2);
+  }
+  bandD += 'L' + xS(hiEdge).toFixed(2) + ',' + yS(0).toFixed(2) + ' Z';
+  svg.appendChild(elem('path', { d: bandD, fill: 'rgba(31,78,121,0.22)' }));
+  
+  // Normal curve
+  let curveD = '';
+  for (let i = 0; i <= 120; i++) {
+    const x = FULL_XMIN + (FULL_XMAX - FULL_XMIN) * i / 120;
+    const y = pdfAtX(x, FULL.mean, FULL.sd) * FULL_BW * FULL.n;
+    curveD += (i === 0 ? 'M' : 'L') + xS(x).toFixed(2) + ',' + yS(y).toFixed(2);
+  }
+  svg.appendChild(elem('path', { d: curveD, class: 'curve-blue' }));
+  
+  // Mean line
+  svg.appendChild(elem('line', {
+    x1: xS(FULL.mean), y1: FULL_VIEW.MT, x2: xS(FULL.mean), y2: yS(0), class: 'mean-line'
+  }));
+  
+  // Vertical band lines (two symmetric lines)
+  if (loEdge >= FULL_XMIN) {
+    svg.appendChild(elem('line', {
+      x1: xS(loEdge), y1: FULL_VIEW.MT, x2: xS(loEdge), y2: yS(0), class: 'cutoff-line-blue'
+    }));
+  }
+  if (hiEdge <= FULL_XMAX) {
+    svg.appendChild(elem('line', {
+      x1: xS(hiEdge), y1: FULL_VIEW.MT, x2: xS(hiEdge), y2: yS(0), class: 'cutoff-line-blue'
+    }));
+  }
+  
+  // X-axis
+  svg.appendChild(elem('line', {
+    x1: FULL_VIEW.ML, y1: yS(0), x2: FULL_VIEW.W - FULL_VIEW.MR, y2: yS(0),
+    stroke: '#888', 'stroke-width': 1.2
+  }));
+  for (let v = 0; v <= 18; v += 3) {
+    const lbl = elem('text', {
+      x: xS(v), y: yS(0) + 14, 'text-anchor': 'middle', class: 'axis-label'
+    });
+    lbl.textContent = v;
+    svg.appendChild(lbl);
+  }
+  const xt = elem('text', {
+    x: FULL_VIEW.ML + FULL_VIEW.PW/2, y: FULL_VIEW.H - 4, 'text-anchor': 'middle', class: 'axis-title'
+  });
+  xt.textContent = 'Days absent';
+  svg.appendChild(xt);
+}
+
+function updateFullPanel() {
+  const z = FULL.zRange;
+  const lo = FULL.mean - z * FULL.sd;
+  const hi = FULL.mean + z * FULL.sd;
+  const modelPct = (2 * normCDF(z) - 1) * 100;
+  const modelN = (modelPct / 100) * FULL.n;
+  const actualN = FULL.data.filter(v => v >= lo && v <= hi).length;
+  const actualPct = (actualN / FULL.n) * 100;
+  
+  document.getElementById('full-ro-z').textContent = '±' + z.toFixed(2);
+  document.getElementById('full-ro-range').textContent = lo.toFixed(2) + ' to ' + hi.toFixed(2);
+  document.getElementById('full-ro-modelpct').innerHTML = modelPct.toFixed(1) + '<small>%</small>';
+  document.getElementById('full-ro-modeln').textContent = 'about ' + Math.round(modelN) + ' of 500';
+  document.getElementById('full-ro-actual').textContent = actualN;
+  document.getElementById('full-ro-actualpct').textContent = actualPct.toFixed(1) + '% of 500';
+  
+  document.getElementById('full-slider-value').textContent = '±' + z.toFixed(1);
+  document.getElementById('full-slider').value = z;
+  
+  const diff = actualN - Math.round(modelN);
+  let fitText;
+  if (Math.abs(diff) <= 5) {
+    fitText = 'The normal model is a close match for the data at this Z-distance.';
+  } else if (diff > 0) {
+    fitText = 'The actual count is higher than the model predicts by ' + diff + ' employees.';
+  } else {
+    fitText = 'The actual count is lower than the model predicts by ' + Math.abs(diff) + ' employees.';
+  }
+  
+  document.getElementById('full-interp').innerHTML =
+    'At <span class="v">Z = ±' + z.toFixed(2) + '</span>, the band runs from ' +
+    '<strong>' + lo.toFixed(2) + ' to ' + hi.toFixed(2) + ' days</strong>. ' +
+    'The normal model predicts <strong>' + modelPct.toFixed(1) + '%</strong> of employees fall within the band ' +
+    '(about ' + Math.round(modelN) + ' of 500). The actual count in the childcare pilot data is <strong>' + actualN + '</strong>. ' +
+    fitText;
+  
+  drawFullChart();
+}
+
+function setupFullPanel() {
+  document.getElementById('full-slider').addEventListener('input', e => {
+    FULL.zRange = parseFloat(e.target.value);
+    updateFullPanel();
+  });
+  document.querySelectorAll('[data-chips="full"] .chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      FULL.zRange = parseFloat(chip.dataset.z);
+      updateFullPanel();
+    });
+  });
+  // Drag on chart adjusts the band symmetrically (distance from mean)
+  const svg = document.getElementById('full-chart');
+  let dragging = false;
+  function pxToData(clientX) {
+    const r = svg.getBoundingClientRect();
+    const px = (clientX - r.left) / r.width * FULL_VIEW.W;
+    return FULL_XMIN + (px - FULL_VIEW.ML) / FULL_VIEW.PW * (FULL_XMAX - FULL_XMIN);
+  }
+  function startDrag(e) { dragging = true; moveDrag(e); }
+  function moveDrag(e) {
+    if (!dragging) return;
+    const cx = e.touches ? e.touches[0].clientX : e.clientX;
+    const xVal = pxToData(cx);
+    const z = Math.abs(xVal - FULL.mean) / FULL.sd;
+    FULL.zRange = Math.max(0.1, Math.min(3.5, z));
+    updateFullPanel();
+    if (e.preventDefault) e.preventDefault();
+  }
+  svg.addEventListener('pointerdown', startDrag);
+  window.addEventListener('pointermove', moveDrag);
+  window.addEventListener('pointerup', () => { dragging = false; });
+}
+
+// ============================================================
+// SUBGROUP PANELS (std and ns) - one-sided cutoff
+// ============================================================
+const PANELS = {
+  std: { data: STD_DATA, mean: 5.90, sd: 3.37, n: 250, mode: 'cut', cutoff: 9.27, label: 'standard-hours' },
+  ns:  { data: NS_DATA,  mean: 7.16, sd: 3.84, n: 250, mode: 'cut', cutoff: 11.0, label: 'non-standard-hours' }
+};
+
+const CHART = { W: 400, H: 200, ML: 30, MR: 12, MT: 12, MB: 28 };
+CHART.PW = CHART.W - CHART.ML - CHART.MR;
+CHART.PH = CHART.H - CHART.MT - CHART.MB;
+const XMIN = 0, XMAX = 18, BW = 1;
+
+function drawPanelChart(key) {
+  const p = PANELS[key];
+  const svg = document.getElementById(key + '-chart');
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  const NS = 'http://www.w3.org/2000/svg';
+  function elem(tag, attrs) {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  
+  const bins = binDataGeneric(p.data, XMIN, XMAX, BW);
+  const maxBin = Math.max(...bins);
+  const curvePeak = pdfAtX(p.mean, p.mean, p.sd) * BW * p.n;
+  const yMax = Math.max(maxBin, curvePeak) * 1.08;
+  const xS = v => CHART.ML + (v - XMIN) / (XMAX - XMIN) * CHART.PW;
+  const yS = c => CHART.MT + CHART.PH - (c / yMax) * CHART.PH;
+  
+  bins.forEach((c, i) => {
+    const x0 = XMIN + i * BW;
+    const flagged = (x0 + BW/2 > p.cutoff);
+    svg.appendChild(elem('rect', {
+      x: xS(x0) + 0.5,
+      y: yS(c),
+      width: (xS(x0 + BW) - xS(x0)) - 1,
+      height: yS(0) - yS(c),
+      class: 'hist-bar' + (flagged ? ' flagged' : '')
+    }));
+  });
+  
+  // Tail fill
+  let tailD = 'M' + xS(p.cutoff).toFixed(2) + ',' + yS(0).toFixed(2);
+  for (let i = 0; i <= 60; i++) {
+    const x = p.cutoff + (XMAX - p.cutoff) * i / 60;
+    const y = pdfAtX(x, p.mean, p.sd) * BW * p.n;
+    tailD += 'L' + xS(x).toFixed(2) + ',' + yS(y).toFixed(2);
+  }
+  tailD += 'L' + xS(XMAX).toFixed(2) + ',' + yS(0).toFixed(2) + ' Z';
+  svg.appendChild(elem('path', { d: tailD, fill: 'rgba(120,47,64,0.18)' }));
+  
+  // Curve
+  let curveD = '';
+  for (let i = 0; i <= 120; i++) {
+    const x = XMIN + (XMAX - XMIN) * i / 120;
+    const y = pdfAtX(x, p.mean, p.sd) * BW * p.n;
+    curveD += (i === 0 ? 'M' : 'L') + xS(x).toFixed(2) + ',' + yS(y).toFixed(2);
+  }
+  svg.appendChild(elem('path', { d: curveD, class: 'curve' }));
+  
+  svg.appendChild(elem('line', {
+    x1: xS(p.mean), y1: CHART.MT, x2: xS(p.mean), y2: yS(0), class: 'mean-line'
+  }));
+  svg.appendChild(elem('line', {
+    x1: CHART.ML, y1: yS(0), x2: CHART.W - CHART.MR, y2: yS(0), stroke: '#888', 'stroke-width': 1.2
+  }));
+  for (let v = 0; v <= 18; v += 3) {
+    const lbl = elem('text', { x: xS(v), y: yS(0) + 14, 'text-anchor': 'middle', class: 'axis-label' });
+    lbl.textContent = v;
+    svg.appendChild(lbl);
+  }
+  const xt = elem('text', {
+    x: CHART.ML + CHART.PW/2, y: CHART.H - 2, 'text-anchor': 'middle', class: 'axis-title'
+  });
+  xt.textContent = 'Days absent';
+  svg.appendChild(xt);
+  
+  // Cutoff line + handle
+  svg.appendChild(elem('line', {
+    x1: xS(p.cutoff), y1: CHART.MT, x2: xS(p.cutoff), y2: yS(0), class: 'cutoff-line'
+  }));
+  svg.appendChild(elem('circle', {
+    cx: xS(p.cutoff), cy: CHART.MT + 8, r: 7, class: 'cutoff-handle'
+  }));
+}
+
+function updatePanel(key) {
+  const p = PANELS[key];
+  p.cutoff = Math.max(0, Math.min(18, p.cutoff));
+  const z = (p.cutoff - p.mean) / p.sd;
+  const tail = 1 - normCDF(z);
+  const modelN = tail * p.n;
+  const actualN = p.data.filter(v => v > p.cutoff).length;
+  
+  document.getElementById(key + '-ro-cut').innerHTML = p.cutoff.toFixed(1) + '<small> days</small>';
+  document.getElementById(key + '-ro-z').textContent = (z >= 0 ? '+' : '') + z.toFixed(2);
+  document.getElementById(key + '-ro-area').innerHTML = (tail * 100).toFixed(1) + '<small>%</small>';
+  document.getElementById(key + '-ro-n').textContent = Math.round(modelN);
+  document.getElementById(key + '-ro-nsub').textContent = 'model · actual: ' + actualN;
+  
+  const slider = document.getElementById(key + '-slider');
+  const sliderValue = document.getElementById(key + '-slider-value');
+  const sliderLabel = document.getElementById(key + '-slider-label');
+  if (p.mode === 'cut') {
+    slider.min = 0; slider.max = 18; slider.step = 0.1;
+    slider.value = p.cutoff;
+    sliderValue.textContent = p.cutoff.toFixed(1);
+    sliderLabel.textContent = 'Cutoff (days)';
+  } else {
+    slider.min = 1; slider.max = 50; slider.step = 1;
+    slider.value = Math.max(1, Math.min(50, Math.round(tail * 100)));
+    sliderValue.textContent = Math.round(tail * 100) + '%';
+    sliderLabel.textContent = 'Worst %';
+  }
+  
+  const interp = document.getElementById(key + '-interp');
+  const dir = z >= 0 ? 'above' : 'below';
+  const diff = actualN - Math.round(modelN);
+  let fitText = '';
+  if (Math.abs(diff) <= 3) {
+    fitText = 'The model is a close approximation for this cutoff.';
+  } else if (diff > 0) {
+    fitText = 'The actual count is higher than the model predicts; the real tail is heavier than normal here.';
+  } else {
+    fitText = 'The actual count is lower than the model predicts; the real tail is lighter than normal here.';
+  }
+  interp.innerHTML = 
+    'An employee at <span class="v">' + p.cutoff.toFixed(1) + ' days</span> sits ' +
+    '<strong>' + Math.abs(z).toFixed(2) + ' SD ' + dir + '</strong> the ' + p.label + ' mean. ' +
+    'The normal model says <strong>' + (tail * 100).toFixed(1) + '%</strong> of ' + p.label + ' employees are at or beyond this cutoff: ' +
+    'about <strong>' + Math.round(modelN) + ' of ' + p.n + '</strong>. ' +
+    'Actual count in the data: <strong>' + actualN + '</strong>. ' + fitText;
+  
+  drawPanelChart(key);
+}
+
+function setupPanel(key) {
+  const slider = document.getElementById(key + '-slider');
+  slider.addEventListener('input', e => {
+    const p = PANELS[key];
+    const v = parseFloat(e.target.value);
+    if (p.mode === 'cut') p.cutoff = v;
+    else {
+      const pct = v / 100;
+      const z = invNorm(1 - pct);
+      p.cutoff = p.mean + z * p.sd;
+    }
+    updatePanel(key);
+  });
+  const toggle = document.querySelector('[data-toggle="' + key + '"]');
+  toggle.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      toggle.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      PANELS[key].mode = btn.dataset.mode;
+      updatePanel(key);
+    });
+  });
+  const chipContainer = document.querySelector('[data-chips="' + key + '"]');
+  chipContainer.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const p = PANELS[key];
+      if (chip.dataset.p) {
+        const pct = parseFloat(chip.dataset.p) / 100;
+        const z = invNorm(1 - pct);
+        p.cutoff = p.mean + z * p.sd;
+      } else if (chip.dataset.sd) {
+        const sds = parseFloat(chip.dataset.sd);
+        p.cutoff = p.mean + sds * p.sd;
+      }
+      updatePanel(key);
+    });
+  });
+  const svg = document.getElementById(key + '-chart');
+  let dragging = false;
+  function pxToData(clientX) {
+    const r = svg.getBoundingClientRect();
+    const px = (clientX - r.left) / r.width * CHART.W;
+    return XMIN + (px - CHART.ML) / CHART.PW * (XMAX - XMIN);
+  }
+  function startDrag(e) { dragging = true; moveDrag(e); }
+  function moveDrag(e) {
+    if (!dragging) return;
+    const cx = e.touches ? e.touches[0].clientX : e.clientX;
+    PANELS[key].cutoff = Math.max(0, Math.min(18, pxToData(cx)));
+    updatePanel(key);
+    if (e.preventDefault) e.preventDefault();
+  }
+  svg.addEventListener('pointerdown', startDrag);
+  window.addEventListener('pointermove', moveDrag);
+  window.addEventListener('pointerup', () => { dragging = false; });
+}
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('DOMContentLoaded', () => {
+  drawAllHistograms();
+  setupInteractiveCurve();
+  setupFullPanel();
+  updateFullPanel();
+  setupPanel('std');
+  setupPanel('ns');
+  updatePanel('std');
+  updatePanel('ns');
+});
+</script>
+
+</body>
+</html>
